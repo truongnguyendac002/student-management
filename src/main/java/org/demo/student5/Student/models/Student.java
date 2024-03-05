@@ -1,22 +1,18 @@
 package org.demo.student5.Student.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
+//@AllArgsConstructor
+@Table(name = "students")
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,18 +25,20 @@ public class Student {
     @Min(value = 0)
     @Max(value = 4)
     private double gpa;
-    @NotBlank
-    @Size(max = 50)
-    private String department;
-    @NotBlank
-    @Size(max = 50)
+
+    @ManyToOne()
+    @JoinColumn(name = "department_id")
+    private Department department;
+
+
     private String major;
-    @NotBlank
-    @Size(max = 50)
+
     private String country;
 
+    private boolean access;
 
-    public Student(Long id, String name, int age, double gpa, String department, String major, String country) {
+    public Student(Long id, String name, int age, double gpa, Department department, String major, String country, boolean access) {
+        System.out.println("Tao moi student");
         this.id = id;
         this.name = name;
         this.age = age;
@@ -48,6 +46,7 @@ public class Student {
         this.department = department;
         this.major = major;
         this.country = country;
-    }
+        this.access = access;
 
+    }
 }

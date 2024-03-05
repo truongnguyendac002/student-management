@@ -6,7 +6,7 @@
 </head>
 <body>
 <h2>List Students</h2>
-<button onclick="window.location.href='/listOption'">Back</button>
+<button onclick="window.location.href='/menu/student/list'">Back</button>
 <br><br>
 <table>
     <thead>
@@ -26,7 +26,7 @@
         <td th:text="${student.name}"></td>
         <td th:text="${student.age}"></td>
         <td th:text="${student.gpa}"></td>
-        <td th:text="${student.department}"></td>
+        <td th:text="${student.department.name}"></td>
         <td th:text="${student.major}"></td>
         <td th:text="${student.country}"></td>
     </tr>

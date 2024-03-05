@@ -6,17 +6,22 @@
 </head>
 <body>
 <h2>Add Student</h2>
-<form th:action="@{/addStudent}" th:object="${student}" method="post">
-    <label>Name: <input type="text" th:field="*{name}"></label><br>
-    <label>Age: <input type="text" th:field="*{age}"></label><br>
-    <label>GPA: <input type="text" th:field="*{gpa}"></label><br>
-    <label>Department: <input type="text" th:field="*{department}"></label><br>
-    <label>Major: <input type="text" th:field="*{major}"></label><br>
-    <label>Country: <input type="text" th:field="*{country}"></label><br>
+<form th:action="@{/menu/student/add}" th:object="${student}" method="post">
+    <label>Name: <input value="" type="text" th:field="*{name}"></label><br>
+    <label>Age: <input value="" type="text" th:field="*{age}"></label><br>
+    <label>GPA: <input value="" type="text" th:field="*{gpa}"></label><br>
+    <label>Department: <select th:field="*{department}">
+        <option th:each="department : ${departments}" th:value="${department.id}" th:text="${department.name}"></option>
+    </select></label><br>
+
+    <label>Major: <input value="" type="text" th:field="*{major}"></label><br>
+    <label>Country: <input value="" type="text" th:field="*{country}"></label><br>
+    <label><input type="hidden" th:value="${true}" th:field="*{access}"></label><br>
+
     <button type="submit">Submit</button>
 </form>
 <br>
-<button onclick="window.location.href='/home'">Back</button>
+<button onclick="window.location.href='/menu'">Back</button>
 
 </body>
 </html>

@@ -6,16 +6,40 @@
 </head>
 <body>
 <h2>Delete Student</h2>
-<form th:action="@{/deleteStudent}" method="post">
-    <label>Select Student to delete:</label><br>
-    <select name="studentId">
-        <option th:each="student : ${students}" th:value="${student.id}" th:text="${student.name}"></option>
-    </select>
-    <br>
-    <br>
-    <button type="submit">Delete</button>
-</form>
+<button onclick="window.location.href='/menu'">Back</button>
+
 <br>
-<button onclick="window.location.href='/home'">Back</button>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Age</th>
+        <th>GPA</th>
+        <th>Department</th>
+        <th>Major</th>
+        <th>Country</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="student : ${students}">
+        <td th:text="${student.id}"></td>
+        <td th:text="${student.name}"></td>
+        <td th:text="${student.age}"></td>
+        <td th:text="${student.gpa}"></td>
+        <td th:text="${student.department.name}"></td>
+        <td th:text="${student.major}"></td>
+        <td th:text="${student.country}"></td>
+        <td>
+            <form th:action="@{/menu/student/delete}" method="post">
+                <input type="hidden" name="studentId" th:value="${student.id}" />
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
 </body>
 </html>

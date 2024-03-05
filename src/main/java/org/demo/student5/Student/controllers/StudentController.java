@@ -1,100 +1,87 @@
 package org.demo.student5.Student.controllers;
 
-import org.demo.student5.Student.repository.StudentRepository;
+import org.demo.student5.Student.models.Department;
 import org.demo.student5.Student.models.Student;
+import org.demo.student5.Student.service.DepartmentService;
+import org.demo.student5.Student.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/menu")
 public class StudentController {
     @Autowired
-    private StudentRepository studentRepository;
+    private StudentService studentService;
 
-    @GetMapping("/home")
-    public String home(Model model) {
-        return "home";
-    }
+    @Autowired
+    private DepartmentService departmentService;
+
 
     //add student
-    @GetMapping("/addStudent")
-    public String showForm(Model model) {
+    @GetMapping("/student/add")
+    public String add(Model model) {
         model.addAttribute("student", new Student());
+
+        List<Department> departments = departmentService.findAll();
+
+        model.addAttribute("departments", departments);
         return "add-student";
     }
 
-    @PostMapping("/addStudent")
-    public String addStudent(Student student) {
-        studentRepository.save(student);
-        return "redirect:/addStudent";
+    @PostMapping("/student/add")
+    public String addStudent(@ModelAttribute Student student) {
+        studentService.save(student);
+        return "redirect:/menu/student/add";
     }
 
     //delete student
-    @GetMapping("/deleteStudent")
-    public String showDeleteForm(Model model) {
-        List<Student> students = studentRepository.findAll();
+    @GetMapping("/student/delete")
+    public String deleteStudent(Model model) {
+        List<Student> students = studentService.findAll();
         model.addAttribute("students", students);
         return "delete-student";
     }
 
-    @PostMapping("/deleteStudent")
+    @PostMapping("/student/delete")
     public String deleteStudent(@RequestParam("studentId") Long studentId) {
-        studentRepository.deleteById(studentId);
-        return "redirect:/deleteStudent";
+        studentService.deleteById(studentId);
+        return "redirect:/menu/student/delete";
     }
-    @GetMapping("/listOption")
-    public String listOption(Model model) {
-        return "list-option";
+    @GetMapping("/student/list")
+    public String displayListStudent() {
+        return "list-student";
     }
 
-    @GetMapping("/listStudents1")
-    public String listStudents1(Model model) {
-        List<Student> students = studentRepository.findAll();
+    @GetMapping("/student/list/all")
+    public String listStudent(Model model) {
+        List<Student> students = studentService.findAll();
         model.addAttribute("students", students);
-        return "list-students";
+        return "display-student-list";
     }
 
-    @GetMapping("/listStudents2")
-    public String listStudents2(Model model) {
-        List<Student> students = studentRepository.findAllByOrderByGpaDesc();
+    @GetMapping("/student/list/order=gpa")
+    public String listStudentsOrderByGpa(Model model) {
+        List<Student> students = studentService.findAllOrderByGpa();
         model.addAttribute("students", students);
-        return "list-students";
+        return "display-student-list";
     }
 
-    @GetMapping("/listStudents3")
-    public String listStudents3(Model model) {
-        List<Student> students = studentRepository.findByCountryOrderByGpaDesc("HaNoi");
+    @GetMapping("/student/list/address=HaNoi&order=gpa")
+    public String listStudentsByAddress(Model model) {
+        List<Student> students = studentService.findAllByAddressOrderByGpa("HaNoi");
         model.addAttribute("students", students);
-        return "list-students";
+        return "display-student-list";
     }
 
-    @GetMapping("/listStudents4")
-    public String listStudents4(Model model) {
-        List<Student> students = studentRepository.findAll();
-        String oldestDepartment = findOldestDepartment(students);
-        students.removeIf(student -> student.getDepartment().equals(oldestDepartment));
+    @GetMapping("/student/list/order=gpa&except=oldest")
+    public String litStudentExceptOldest(Model model) {
+        List<Student> students = studentService.findExceptOldestDepartment();
         model.addAttribute("students", students);
-        return "list-students";
-    }
-    private String findOldestDepartment(List<Student> students) {
-        String oldestDepartment= "";
-        int oldestDepartmentNumber = Integer.MAX_VALUE;
-
-        for (Student student : students) {
-            StringBuilder department = new StringBuilder(student.getDepartment());
-            System.out.println(department);
-            int departmentNumber = Integer.parseInt(String.valueOf(department.replace(0,1,""))) ;
-            if (departmentNumber < oldestDepartmentNumber) {
-                oldestDepartmentNumber = departmentNumber;
-                oldestDepartment = student.getDepartment();
-            }
-        }
-        return oldestDepartment;
+        return "display-student-list";
     }
 
 }
