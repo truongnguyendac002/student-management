@@ -11,7 +11,7 @@ import lombok.*;
 @Entity
 @Data
 @NoArgsConstructor
-//@AllArgsConstructor
+@AllArgsConstructor
 @Table(name = "students")
 public class Student {
     @Id
@@ -37,16 +37,5 @@ public class Student {
 
     private boolean access;
 
-    public Student(Long id, String name, int age, double gpa, Department department, String major, String country, boolean access) {
-        System.out.println("Tao moi student");
-        this.id = id;
-        this.name = name;
-        this.age = age;
-        this.gpa = gpa;
-        this.department = department;
-        this.major = major;
-        this.country = country;
-        this.access = access;
 
-    }
 }

@@ -1,19 +1,35 @@
 package org.demo.student5.Student.controllers;
 
-import jakarta.validation.Valid;
-import org.demo.student5.Student.repository.RoleRepository;
-import org.demo.student5.Student.repository.UserRepository;
-import org.demo.student5.Student.security.jwt.JwtUnits;
-//import org.demo.student5.payload.request.LoginRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.demo.student5.Student.payload.LoginDto;
+import org.demo.student5.Student.payload.RegisterDto;
+import org.demo.student5.Student.service.AuthService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.web.bind.annotation.*;
-
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("api/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
+    private AuthService authService;
 
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+
+    @PostMapping(value = {"/login", "/signin"})
+    public ResponseEntity<String> login(@RequestBody LoginDto loginDto){
+        String response = authService.login(loginDto);
+        return ResponseEntity.ok(response);
+    }
+    @PostMapping(value = {"/register", "/signup"})
+    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
+        String response = authService.register(registerDto);
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+
+    }
 }
