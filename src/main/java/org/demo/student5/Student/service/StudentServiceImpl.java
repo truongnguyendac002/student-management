@@ -19,7 +19,6 @@ public class StudentServiceImpl implements StudentService{
     @Override
     public void save(Student student) {
         student.setAccess(true);
-//        System.out.println("luu student");
         studentRepository.save(student);
     }
 

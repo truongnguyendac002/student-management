@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/menu")
+@RequestMapping("student")
 public class StudentController {
     @Autowired
     private StudentService studentService;
@@ -38,7 +38,7 @@ public class StudentController {
 //        return "add-student";
 //    }
 
-    @PostMapping("/student/add")
+    @PostMapping("api/v1/student/add")
     public String addStudent(@ModelAttribute Student student) {
         studentService.save(student);
         return "redirect:/menu/student/add";
