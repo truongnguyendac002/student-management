@@ -4,13 +4,17 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.demo.student5.Student.exception.APIException;
+import org.demo.student5.Student.models.ERole;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Collection;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenProvider {
@@ -29,8 +33,12 @@ public class JwtTokenProvider {
 
         Date expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
 
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
+
         String token = Jwts.builder()
                 .setSubject(username)
+                .claim("admin", isAdmin)
                 .setIssuedAt(new Date())
                 .setExpiration(expireDate)
                 .signWith(key())
@@ -54,6 +62,15 @@ public class JwtTokenProvider {
         String username = claims.getSubject();
         return username;
     }
+    public boolean isAdmin(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtSecret.getBytes())
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.get("admin", Boolean.class);
+    }
+
+
 
     // validate Jwt token
     public boolean validateToken(String token){
